@@ -3,9 +3,10 @@
 
 ## Track1
 * Deep Learning을 이용한 이미지 분류 (Classification)
-부산대학교와 정컴을 대표하는 Landmark 5종류에 대한 영상 분류를 위한 Deep Learning
- * 랜드마크 영상 예시
-![img](https://imgur.com/a/LtFsdVh)
+
+https://docs.google.com/document/u/1/d/1PVFJimsrsI_e9ye-1NfXhdgDlyimA--yBl92OGhi7zU/edit#heading=h.76moldfr47w0
+
+* 부산대학교와 정컴을 대표하는 Landmark 5종류에 대한 영상 분류를 위한 Deep Learning
 
 * 참가 팀은 Training / Test Dataset을 직접 수집하여 사용 할 수 있다.
 * Training & Testing Dataset, Trained Model 및 개발 내용 요약문을 포함하여 10/25 까지 접수
@@ -18,6 +19,9 @@
 
 ## Track2
 * Deep Learning을 이용한 예술 작품 생성 (Art Generation)
+
+https://docs.google.com/document/d/1SozR4Z0wgjDETKGn1pL6tL54vaDsehVZOZ_-pacU_6o/edit
+
 * AI 기반의 Image Generation을 이용해 부산 / 부산대학교 / IT / 정컴을 대표 할 수 있는 이미지 형태의 예술 작품을 생성
 * AI 기반의 이미지 생성 및 Retouching 과정등을 포함한 요약문을 10/25 까지 접수
 * 작품은 AI를 이용해 생성하였음을 보여야 함
