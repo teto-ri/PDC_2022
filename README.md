@@ -31,7 +31,6 @@ Deep Learning을 이용한 예술 작품 생성 (Art Generation)
     + `.ini`
     + `.yaml`
     + `.py`
----
 
 ### /data
 
@@ -48,8 +47,6 @@ Deep Learning을 이용한 예술 작품 생성 (Art Generation)
         - class 1
         - class 2
         - etc.
-
----
 
 ### /docs
 
