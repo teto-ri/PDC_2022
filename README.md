@@ -5,7 +5,7 @@
 * Deep Learning을 이용한 이미지 분류 (Classification)
 부산대학교와 정컴을 대표하는 Landmark 5종류에 대한 영상 분류를 위한 Deep Learning
  * 랜드마크 영상 예시
-![img](https://ibb.co/6NJP9Jc])
+![img](https://imgur.com/a/LtFsdVh)
 
 * 참가 팀은 Training / Test Dataset을 직접 수집하여 사용 할 수 있다.
 * Training & Testing Dataset, Trained Model 및 개발 내용 요약문을 포함하여 10/25 까지 접수
