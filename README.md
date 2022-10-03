@@ -32,7 +32,7 @@ https://docs.google.com/document/d/1SozR4Z0wgjDETKGn1pL6tL54vaDsehVZOZ_-pacU_6o/
 
 ## Dependency Management
 * Sever : Window10 , Cuda 11.3, CuDNN: 8.2.1, Python 3.9.13
-
+* Main Framework : Tensorflow 2.8, OpenCV 4.6
 * Sever specification : AMD Ryzen 3 3300X, 16GB ram, GTX1660SUPER
 
 ## Project Management
