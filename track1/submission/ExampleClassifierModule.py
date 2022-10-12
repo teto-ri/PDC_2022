@@ -15,15 +15,11 @@
 
 """
 
-import torch
-from torch import nn
-from torch.utils.data import DataLoader
-from torchvision import transforms
-from torchvision.datasets import ImageFolder
+import tensorflow as tf
 from tqdm import tqdm
 
 
-class ExampleClassifier(nn.Module):
+class ExampleClassifier():
     """
     DLC-T1 Submission을 위한 Class 명세
     """
@@ -57,47 +53,56 @@ class ExampleClassifier(nn.Module):
 
         if pretrain is not None:
             # For evaluation
-            self.model = torch.load(pretrain)
+            self.model = tf.keras.models.load_model(pretrain)
         else:
             self.build_model()
 
         # Dataset loading에 적용하기 위한 transform은 생성자에서 선언
-        self.transform = transforms.Compose([
-            transforms.Resize((128, 128)),
-            transforms.Grayscale(),
-            transforms.ToTensor()
-        ])
+        test_generator = tf.keras.preprocessing.image.ImageDataGenerator(
+        preprocessing_function=tf.keras.applications.resnet_v2.preprocess_input)
 
         # 데이터셋 구조가 정해져 있으므로, ImageFolder class를 사용하기를 추천
         # 다른 class를 사용 할 경우 반드시 각 샘플은 (image, label)을 반환해야 함.
-        self.dataset = ImageFolder(
-            self.path_data,
-            transform=self.transform
+        self.dataset = test_generator.flow_from_directory(
+        directory=self.path_data,
+        target_size=(224, 224),
+        color_mode='rgb',
+        class_mode='categorical',
+        batch_size=1,
+        shuffle=False
         )
-        self.num_data = len(self.dataset)
+        self.num_data = int(self.dataset.samples)
 
     def build_model(self):
         """
         Code 점검의 편의를 위해 model 선언은 반드시 build_model 안에서 완료해야 합니다.
         build_model 외부에서 model을 변경하지 마세요. (제발 Plz ^^)
         """
-        self.model = nn.Sequential(
-            nn.Conv2d(1, 64, (3, 3), padding=(1, 1), bias=False),
-            nn.BatchNorm2d(64),
-            nn.ReLU(inplace=True),
-            nn.MaxPool2d((2, 2)),
-            nn.Conv2d(64, 64, (3, 3), padding=(1, 1), bias=False),
-            nn.BatchNorm2d(64),
-            nn.ReLU(inplace=True),
-            nn.MaxPool2d((2, 2)),
-            nn.Conv2d(64, 64, (3, 3), padding=(1, 1), bias=False),
-            nn.BatchNorm2d(64),
-            nn.ReLU(inplace=True),
-            nn.MaxPool2d((2, 2)),
-            nn.Flatten(),
-            nn.Linear(16*32*32, 5),
-        )
+        kwargs = {'input_shape':(224, 224, 3),
+                'include_top':False,
+                'weights':'imagenet',
+                'pooling':'avg'}
+    
+        pretrained_model = tf.keras.applications.ResNet152V2(**kwargs)
+        pretrained_model.trainable = False # 레이어를 동결 시켜서 훈련중 손실을 최소화 한다.
+        
+        inputs = pretrained_model.input
 
+        x = tf.keras.layers.Dense(128, activation='relu')(pretrained_model.output)
+        x = tf.keras.layers.Dense(128, activation='relu')(x)
+
+        outputs = tf.keras.layers.Dense(8, activation='softmax')(x)
+        # 라벨 개수가 8개이기 때문에 Dencs도 8로 설정
+        model = tf.keras.Model(inputs=inputs, outputs=outputs)
+
+        model.compile(
+            optimizer='adam',
+            loss='categorical_crossentropy',
+            metrics=['accuracy']
+        )
+    
+        return model
+    
     def forward(self, x):
         """
         forward method는 입력 이미지 x를 받아서 (class score) y를 반환합니다.
@@ -111,10 +116,10 @@ class ExampleClassifier(nn.Module):
         """
         # x: [Batch, Channel, Height, Width]
         # y: [Batch x Num_Class(5)]
-        y = self.model(x)
+        y = self.model.predict(x)
         return y
 
-    def train_model(self, config):
+    def train_model(self, model, config):
         """
         train_model은 반드시 존재해야 하지만, overriding 가능합니다.
         기본으로 제공되는 코드는 구현 참고용 입니다.
@@ -130,63 +135,65 @@ class ExampleClassifier(nn.Module):
         loss = config['loss']
         optim = config['optim']
 
-        train_loader = DataLoader(self.dataset, batch_size=batch_size)
+        train_generator = tf.keras.preprocessing.image.ImageDataGenerator(
+        preprocessing_function=tf.keras.applications.resnet_v2.preprocess_input,
+        validation_split=0.1)
+        
+        train_images = train_generator.flow_from_directory(
+        directory=self.path_data,
+        target_size=(224, 224), # 이미지 사이즈
+        color_mode='rgb', # 이미지 채널수
+        class_mode='categorical', # Y값(Label값)
+        batch_size=32,
+        shuffle=True, # 데이터를 섞을지 여부
+        seed=0,
+        subset='training', # train 인지 val인지 설정
+        rotation_range=30, # 회전제한 각도 30도
+        zoom_range=0.15, # 확대 축소 15%
+        width_shift_range=0.2, # 좌우이동 20%
+        height_shift_range=0.2, # 상하이동 20%
+        shear_range=0.15, # 반시계방햐의 각도
+        horizontal_flip=True, # 좌우 반전 True
+        fill_mode="nearest"
+        # 이미지 변경시 보완 방법 (constant, nearest, reflect, wrap) 4개 존재
+        )
+        val_images = train_generator.flow_from_directory(
+        directory=self.path_data,
+        target_size=(224, 224),
+        color_mode='rgb',
+        class_mode='categorical',
+        batch_size=32,
+        shuffle=True,
+        seed=0,
+        subset='validation',
+        rotation_range=30,
+        zoom_range=0.15,
+        width_shift_range=0.2,
+        height_shift_range=0.2,
+        shear_range=0.15,
+        horizontal_flip=True,
+        fill_mode="nearest"
+    )
+        print('Number of data : {}'.format(train_images.samples + val_images.samples))
 
-        print('Number of data : {}'.format(self.num_data))
-
+        earlystopper = tf.keras.callbacks.EarlyStopping(monitor='val_loss', patience=3, verbose=1)
+        reduce_lr = tf.keras.callbacks.ReduceLROnPlateau(monitor='val_loss', factor=0.2, patience=3, verbose=1, min_lr=0.00001)
+        
+        # Save the best model during the traning
+        checkpointer = tf.keras.callbacks.ModelCheckpoint(filepath='{epoch}-{val_loss:.2f}-{val_accuracy:.2f}.h5'
+                                        ,monitor='val_loss'
+                                        ,verbose=1
+                                        ,save_best_only=True
+                                        ,save_weights_only=True)
+        # Train
+        training = model.fit(generator=self.generators.train_generator
+                                ,epochs=epochs
+                                ,steps_per_epoch=steps_per_epoch
+                                ,validation_data=self.generators.val_generator
+                                ,validation_steps=validation_steps
+                                ,callbacks=[earlystopper, checkpointer, reduce_lr])
+        model.load_weights('best_model.h5')
+        # Get the best saved weights
+        return training
         # 가장 기본적인 훈련 코드 구현의 예시
-        self.model.train()
-        for epoch in range(1, epochs+1):
-            print('Epoch : {} / {}'.format(epoch, epochs))
-
-            # 진행 상황을 보기 위한 tqdm 이용 예시
-            pbar = tqdm(total=self.num_data, dynamic_ncols=True)
-
-            for batch, sample in enumerate(train_loader):
-                img, label = sample
-
-                optim.zero_grad()
-
-                output = self.forward(img)
-
-                loss_val = loss(output, label)
-
-                loss_val.backward()
-
-                optim.step()
-
-                pbar.set_description('Loss : {}'.format(loss_val.item()))
-                pbar.update(batch_size)
-
-            pbar.close()
-
-    def eval_model(self):
-        """
-        Evaluation 참고용 코드 입니다. 반드시 존재 할 필요는 없으며,
-        Official evaluation은 직접 self.model과 self.dataset을 접근하여 진행합니다.
-
-        :return: 
-        """
-        eval_loader = DataLoader(self.dataset, batch_size=1)
-
-        print('Number of data : {}'.format(self.num_data))
-
-        pbar = tqdm(total=self.num_data, dynamic_ncols=True)
-
-        self.model.eval()
-
-        num_correct = 0
-
-        for batch, sample in enumerate(eval_loader):
-            img, label = sample
-
-            output = self.forward(img)
-
-            if label.item() == torch.argmax(output).item():
-                num_correct += 1
-
-            pbar.update(1)
-
-        pbar.close()
-
-        print('Accuracy : {:.4f} %'.format(num_correct * 100 / self.num_data))
+        

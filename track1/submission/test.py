@@ -19,8 +19,7 @@
 import argparse
 import importlib
 import time
-import torch
-from torch.utils.data import DataLoader
+import numpy as np
 from tqdm import tqdm
 
 
@@ -64,27 +63,26 @@ def main():
 
     # For statistics
     result = dict()
-    for cls in dataset.classes:
-        result[dataset.class_to_idx[cls]] = [0, 0]
-
-    eval_loader = DataLoader(dataset, batch_size=1)
-
-    classifier.model.eval()
+    for cls in dataset.class_indices.keys():
+        result[dataset.class_indices[cls]] = [0, 0]
 
     pbar = tqdm(total=classifier.num_data, dynamic_ncols=True)
 
-    for batch, sample in enumerate(eval_loader):
-        img, label = sample
+    for batch, sample in enumerate(dataset):
+        img, label = sample[0], int(np.argmax(sample[1],1))
 
         output = classifier.forward(img)
 
-        pred = torch.argmax(output).item()
-        gt = label.item()
+        pred = int(np.argmax(output,1))
+        gt = label
 
         result[gt][1] += 1
         if pred == gt:
             result[gt][0] += 1
-
+        
+        if batch == classifier.num_data:
+            break
+        
         pbar.update(1)
 
     pbar.close()
@@ -101,8 +99,9 @@ def main():
     ))
     correct_all = 0
     total_all = 0
+    classes = dict(map(reversed,dataset.class_indices.items()))
     for k, v in result.items():
-        cls = dataset.classes[k]
+        cls = classes[k]
         correct = result[k][0]
         total = result[k][1]
         acc = 100. * correct / (total + 1e-8)
