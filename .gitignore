@@ -1,2 +1,6 @@
 .ipynb_checkpoints
 */.ipynb_checkpoints/*
+/data
+/test/natural_images
+/test/model
+/track1/submission/dataset
