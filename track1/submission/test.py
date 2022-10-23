@@ -25,15 +25,15 @@ from tqdm import tqdm
 
 parser = argparse.ArgumentParser(description='Simple evaluation script')
 
-parser.add_argument('--path_data', type=str, default='dataset/test',
+parser.add_argument('--path_data', type=str, default='track1/submission/dataset/test',
                     help='Path to dataset')
-parser.add_argument('--path_module', type=str, default='./',
+parser.add_argument('--path_module', type=str, default='track1/submission/',
                     help='Path containing your module file')
-parser.add_argument('--module_name', type=str, default='ExampleClassifierModule',
+parser.add_argument('--module_name', type=str, default='StrongUnivClassifierModule',
                     help='Your module name')
-parser.add_argument('--class_name', type=str, default='ExampleClassifier',
+parser.add_argument('--class_name', type=str, default='StrongUnivClassifier',
                     help='Your class name')
-parser.add_argument('--path_model', type=str, default='model.pt',
+parser.add_argument('--path_model', type=str, default='track1/submission/augmentaion_TL_ResNet50V2_val_acc_0.994.h5',
                     help='Path to pretrained model')
 
 args = parser.parse_args()
