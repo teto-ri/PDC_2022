@@ -3,7 +3,7 @@
 
 ## Track1
 * Deep Learning을 이용한 이미지 분류 (Classification)
-
+https://github.com/PNUCSE/2022_DLC_LandmarkClassification
 https://docs.google.com/document/u/1/d/1PVFJimsrsI_e9ye-1NfXhdgDlyimA--yBl92OGhi7zU/edit#heading=h.76moldfr47w0
 
 * 부산대학교와 정컴을 대표하는 Landmark 5종류에 대한 영상 분류를 위한 Deep Learning
@@ -19,7 +19,6 @@ https://docs.google.com/document/u/1/d/1PVFJimsrsI_e9ye-1NfXhdgDlyimA--yBl92OGhi
 
 ## Track2
 * Deep Learning을 이용한 예술 작품 생성 (Art Generation)
-
 https://docs.google.com/document/d/1SozR4Z0wgjDETKGn1pL6tL54vaDsehVZOZ_-pacU_6o/edit
 
 * AI 기반의 Image Generation을 이용해 부산 / 부산대학교 / IT / 정컴을 대표 할 수 있는 이미지 형태의 예술 작품을 생성
@@ -33,99 +32,60 @@ https://docs.google.com/document/d/1SozR4Z0wgjDETKGn1pL6tL54vaDsehVZOZ_-pacU_6o/
 ## Dependency Management
 * Sever : Window10 , Cuda 11.3, CuDNN: 8.2.1, Python 3.9.13
 * Main Framework : Tensorflow 2.8, OpenCV 4.6
-* Sever specification : AMD Ryzen 3 3300X, 16GB ram, GTX1660SUPER
+* Sever specification : AMD Ryzen 3 3300X, 16GB ram, GTX3060
 
-## Project Management
-1. /config : Project config as json, ini..
-2. /data : Training data as train, val, test
-3. /docs : PDC2022 document as Notice, report..
-4. /checkpoints : Trained models with name rules
-5. /notebooks : data processing, Modeling ipynb notebook
-6. /scripts : Train,test,run py scripts
-7. /test : Sample, Unit test
-8. /src : Program sources
 
-### /configs
+## Dataset Structure
+- Train 과 Test 데이터셋 구조는 동일합니다.
+- Root directory (train 또는 test) 아래에는 5개 Landmark에 대한 subdir이 존재합니다.
+- 각 클래스는 **cse(0, 컴퓨터공학관), hh(1, Humanities Hall, 인문관), rg(2, 무지개문), wb(3, 웅비의 탑), wjj(4, 운죽정)** 에 해당합니다.
+- 예제 데이터의 경우 7장의 train, 3장의 test image가 각 class 별로 포함되어 있으며 png format 입니다.
+- 다만 실제 데이터의 경우 png, jpg, bmp 등의 다양한 이미지 포맷이 포함되어 있을 수 있습니다.
+- 예제 데이터의 경우 이름의 형식을 통일해 두었으나, 실제 데이터의 경우 임의의 파일 이름을 가질 수 있습니다.
+- 이미지의 최소 사이즈는 가로 x 세로 기준 320 x 240, 최대 사이즈는 1280 x 960 로 제한합니다.
 
-- model configs
-    + Choose the format
-    + `.json`
-    + `.ini`
-    + `.yaml`
-    + `.py`
-
-### /data
-
-- your datasets
-    + train
-        - class 1
-        - class 2
-        - etc.
-    + valid
-        - class 1
-        - class 2
-        - etc.
-    + test
-        - class 1
-        - class 2
-        - etc.
-
-### /docs
-
-- project documents
-    + install
-    + how to run?
-    + api structure
-
-### /checkpoints
-
-- trained model
-
-### /notebooks
-
-- data processing notebook
-- tutorial notebook
-
-### /scripts
-
-- train scripts
-- test scripts
-- run scripts
-
-### /test
-
-For unittest
-
-- dataset
-- dataloader
-- model
-- train
-- valid
-- test
-
-### /src
-
-- `/data`
-    + dataloader
-    + data utils
-
-- `/model`
-    + model architecture
-    + model utils
-
-- `/visualization`
-    + visualization tools
-
-- `loss.py` and `/loss`
-    + define custom loss
-
-- `optim.py` and `/optim`
-    + define custom optimizer
-
-- `scheduler.py` and `/scheduler`
-    + define custom scheduler
-
-- `transforms.py` and `/transforms`
-    + define custom data augmentation
-
-### setup.py
+```commandline
+dataset
+├── test
+│   ├── cse
+│   │   ├── 00000000.png
+│   │   ├── ...
+│   │   └── XXXXXXXX.png
+│   ├── hh
+│   │   ├── 00000000.png
+│   │   ├── ...
+│   │   └── XXXXXXXX.png
+│   ├── rg
+│   │   ├── 00000000.png
+│   │   ├── ...
+│   │   └── XXXXXXXX.png
+│   ├── wb
+│   │   ├── 00000000.png
+│   │   ├── ...
+│   │   └── XXXXXXXX.png
+│   └── wjj
+│       ├── 00000000.png
+│       ├── ...
+│       └── XXXXXXXX.png
+└── train
+    ├── cse
+    │   ├── 00000000.png
+    │   ├── ...
+    │   └── XXXXXXXX.png
+    ├── hh
+    │   ├── 00000000.png
+    │   ├── ...
+    │   └── XXXXXXXX.png
+    ├── rg
+    │   ├── 00000000.png
+    │   ├── ...
+    │   └── XXXXXXXX.png
+    ├── wb
+    │   ├── 00000000.png
+    │   ├── ...
+    │   └── XXXXXXXX.png
+    └── wjj
+        ├── 00000000.png
+        ├── ...
+        └── XXXXXXXX.png
+```
