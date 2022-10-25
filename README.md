@@ -1,6 +1,14 @@
 # PDC_2022
-2022 PNU Deep Learning Challenge
+2022 PNU Deep Learning Challenge / CSE Tech Week
 
+## Leap Forward Tech Week!
+* 주제 : 내년 PNU CSE Tech Week 때 진행했으면 하는 프로그램 아이디어 내기 
+
+* 접수 기간 : 10/09 ~ 10/25 - 부원끼리 모인 사진 한 장과 아이디어 보고서를 10월 25일까지 접수,  CTG 별로  최대 하나의  아이디어 제출 가능 
+
+* 보고서 내용에는  1) 프로그램의 이름   2) 프로그램의 취지/기획 의도  3) 운영 계획 (시간, 후보 장소 등을 포함)  4) 준비 계획 (사전 준비 작업 계획) 등이 필히 들어가야 합니다.
+
+보고서는 PDF 형식으로 출력하여 제출
 ## Track1
 * Deep Learning을 이용한 이미지 분류 (Classification)
 https://github.com/PNUCSE/2022_DLC_LandmarkClassification
@@ -33,59 +41,3 @@ https://docs.google.com/document/d/1SozR4Z0wgjDETKGn1pL6tL54vaDsehVZOZ_-pacU_6o/
 * Sever : Window10 , Cuda 11.3, CuDNN: 8.2.1, Python 3.9.13
 * Main Framework : Tensorflow 2.8, OpenCV 4.6
 * Sever specification : AMD Ryzen 3 3300X, 16GB ram, GTX3060
-
-
-## Dataset Structure
-- Train 과 Test 데이터셋 구조는 동일합니다.
-- Root directory (train 또는 test) 아래에는 5개 Landmark에 대한 subdir이 존재합니다.
-- 각 클래스는 **cse(0, 컴퓨터공학관), hh(1, Humanities Hall, 인문관), rg(2, 무지개문), wb(3, 웅비의 탑), wjj(4, 운죽정)** 에 해당합니다.
-- 예제 데이터의 경우 7장의 train, 3장의 test image가 각 class 별로 포함되어 있으며 png format 입니다.
-- 다만 실제 데이터의 경우 png, jpg, bmp 등의 다양한 이미지 포맷이 포함되어 있을 수 있습니다.
-- 예제 데이터의 경우 이름의 형식을 통일해 두었으나, 실제 데이터의 경우 임의의 파일 이름을 가질 수 있습니다.
-- 이미지의 최소 사이즈는 가로 x 세로 기준 320 x 240, 최대 사이즈는 1280 x 960 로 제한합니다.
-
-```commandline
-dataset
-├── test
-│   ├── cse
-│   │   ├── 00000000.png
-│   │   ├── ...
-│   │   └── XXXXXXXX.png
-│   ├── hh
-│   │   ├── 00000000.png
-│   │   ├── ...
-│   │   └── XXXXXXXX.png
-│   ├── rg
-│   │   ├── 00000000.png
-│   │   ├── ...
-│   │   └── XXXXXXXX.png
-│   ├── wb
-│   │   ├── 00000000.png
-│   │   ├── ...
-│   │   └── XXXXXXXX.png
-│   └── wjj
-│       ├── 00000000.png
-│       ├── ...
-│       └── XXXXXXXX.png
-└── train
-    ├── cse
-    │   ├── 00000000.png
-    │   ├── ...
-    │   └── XXXXXXXX.png
-    ├── hh
-    │   ├── 00000000.png
-    │   ├── ...
-    │   └── XXXXXXXX.png
-    ├── rg
-    │   ├── 00000000.png
-    │   ├── ...
-    │   └── XXXXXXXX.png
-    ├── wb
-    │   ├── 00000000.png
-    │   ├── ...
-    │   └── XXXXXXXX.png
-    └── wjj
-        ├── 00000000.png
-        ├── ...
-        └── XXXXXXXX.png
-```
