@@ -8,4 +8,5 @@
 /track1/submission/__pycache__
 /track1/submission/checkpoint
 /track1/submission/model
-/track1/submission/augmentaion_TL_ResNet50V2_val_acc_0.994.h5
+/track1/submission/StrongUnivModel.h5
+/track1/submission/submission

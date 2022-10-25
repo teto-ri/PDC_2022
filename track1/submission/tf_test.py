@@ -33,7 +33,7 @@ parser.add_argument('--module_name', type=str, default='StrongUnivClassifierModu
                     help='Your module name')
 parser.add_argument('--class_name', type=str, default='StrongUnivClassifier',
                     help='Your class name')
-parser.add_argument('--path_model', type=str, default='track1/submission/augmentaion_TL_ResNet50V2_val_acc_0.994.h5',
+parser.add_argument('--path_model', type=str, default='track1/submission/StrongUnivModel.h5',
                     help='Path to pretrained model')
 
 args = parser.parse_args()
